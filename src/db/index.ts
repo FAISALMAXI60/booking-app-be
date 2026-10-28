@@ -5,6 +5,7 @@ import * as authSchema from "./auth.ts";
 import * as businessSchema from "./provider/business.ts";
 import * as servicesSchema from "./provider/services.ts";
 import * as hoursSchema from "./provider/hours.ts";
+import * as relations from "./relations.ts";
 
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool, { schema: { ...authSchema, ...businessSchema, ...servicesSchema, ...hoursSchema } });
+export const db = drizzle(pool, { schema: { ...authSchema, ...businessSchema, ...servicesSchema, ...hoursSchema, ...relations } });
