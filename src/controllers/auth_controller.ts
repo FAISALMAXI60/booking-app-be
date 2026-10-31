@@ -15,8 +15,8 @@ export const signUpController = async (req: Request, res: Response) => {
         }
         const hashPassword = await bcrypt.hash(req.body.password, salt);
         const [user]: any = await db.insert(users).values({ ...req.body, password: hashPassword }).returning();
-        setAuthCookie(res, user?.id)
-        res.json(user);
+        setAuthCookie(res, user?.id, user?.role)
+        res.json({ user });
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }
@@ -29,8 +29,19 @@ export const loginController = async (req: Request, res: Response) => {
         if (!user || !(await compare(req.body.password, user?.password))) {
             return res.status(401).json({ message: "Invalid email or password" })
         }
-        setAuthCookie(res, user?.id);
+        setAuthCookie(res, user?.id, user?.role);
         res.json({ user });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const getCurrentUserController = async (req: Request, res: Response) => {
+    try {
+        console.log("req came here");
+        
+        const [currentUser] = await db.select().from(users).where(eq(users.id, (req as any).user.userId))
+        res.json(currentUser)
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }

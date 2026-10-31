@@ -11,7 +11,7 @@ export const hoursSetupController = async (req: Request, res: Response) => {
             const result = await tx.insert(workingHours).values(req.body.data).returning();
             return result
         })
-        await db.update(users).set({ providerCurrentStep: 4 }).where(eq(users.id, (req as any).userId))
+        await db.update(users).set({ providerCurrentStep: 4 }).where(eq(users.id, (req as any).user.userId))
         res.status(201).json(newRecord);
     } catch (err: any) {
         res.status(500).json({ message: err.message });
